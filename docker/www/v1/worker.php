@@ -20,9 +20,6 @@ while ($request = $worker->waitRequest()) {
 
         $params = $request->getQueryParams();
 
-        // getQueryParams doesn't work
-        $params['rolls'] = 10;
-
         if(isset($params['rolls'])) {
             $result = $dice->roll($params['rolls']);
             $response->getBody()->write(json_encode($result));

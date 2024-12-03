@@ -1,5 +1,5 @@
 docker run --network docker_default elswork/wrk -c5 -t5 -d30 'http://web/v1/index.php?rolls=10'
-docker run --network docker_default elswork/wrk -c5 -t5 -d30 'http://web/phprr/?rolls=10'
+docker run --network docker_default elswork/wrk -c10 -t10 -d30 'http://web/phprr/?rolls=1'
 
 docker run --network docker_default elswork/wrk -c5 -t5 -d30 'http://web/index.html'
 
@@ -9,3 +9,35 @@ docker run --rm --network docker_default elswork/wrk -c1 -t1 -d30s 'http://echo-
  sudo service nginx stop
 
  sudo docker run --rm -it -e COMPOSER='composer.v1.json' -v ./www:/app --entrypoint=composer  composer/composer update --ignore-platform-reqs
+
+ sudo docker run --rm -it -e COMPOSER='composer.v1.json' -v ./www:/app --entrypoint=composer  composer/composer require open-telemetry/sdk open-telemetry/opentelemetry-auto-slim open-telemetry/opentelemetry-auto-psr18 open-telemetry/exporter-otlp  --ignore-platform-reqs
+ docker run --rm -it -e COMPOSER='composer.v2.json' -v ./www:/app --entrypoint=composer  composer/composer require open-telemetry/opentelemetry-auto-guzzle --ignore-platform-reqs
+
+
+rr.yaml
+http:
+  pool:
+    num_workers: 32
+    max_jobs: 200
+
+
+phpfpm
+    environment:
+      OTEL_PHP_AUTOLOAD_ENABLED: true
+      OTEL_SERVICE_NAME: php-fpm-slim
+      OTEL_TRACES_EXPORTER: otlp
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/json
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+      OTEL_PROPAGATORS: baggage,tracecontext 
+roadrunner
+
+
+    environment:
+      OTEL_PHP_AUTOLOAD_ENABLED: true
+      OTEL_SERVICE_NAME: phprr
+      OTEL_TRACES_EXPORTER: otlp
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/json
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+      OTEL_PHP_TRACES_PROCESSOR: simple
+      OTEL_PROPAGATORS: baggage,tracecontext 
+      OTEL_PHP_DISABLED_INSTRUMENTATIONS: slim

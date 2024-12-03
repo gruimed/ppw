@@ -1,0 +1,26 @@
+version: '3'
+
+rpc:
+  listen: tcp://127.0.0.1:6001
+
+server:
+  command: "/usr/local/bin/php /var/www/v1/worker.php"
+
+otel:
+  insecure: true
+  compress: false
+  client: http
+  exporter: otlp
+  resource.service_name: rr # your app name
+  endpoint: otel-collector:4318
+
+http:
+  address: "0.0.0.0:8080"
+  middleware: [gzip, otel]
+  pool:
+    num_workers: 64
+    max_jobs: 200
+
+logs:
+  level: info
+  output: stdout

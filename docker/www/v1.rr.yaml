@@ -8,7 +8,7 @@ server:
 
 http:
   address: "0.0.0.0:8080"
-  middleware: [gzip] # otel middleware should be applied first in the line (from right to left). Middleware order is: `request` --> `otel` -> `gzip` -> `http-plugin` -> `PHP worker`.
+  middleware: [gzip]
 
 logs:
   level: info

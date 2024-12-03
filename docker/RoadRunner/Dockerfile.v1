@@ -1,4 +1,13 @@
 FROM ghcr.io/roadrunner-server/roadrunner:2024.2 AS roadrunner
 FROM php:8.3-cli-alpine
 
+RUN curl -sSLf \
+        -o /usr/local/bin/install-php-extensions \
+        https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions && \
+    chmod +x /usr/local/bin/install-php-extensions && \
+    install-php-extensions opentelemetry mysqli opcache
+
+RUN echo -e "opcache.enable=1\nopcache.enable_cli=1\nopcache.jit_buffer_size=256M\n" > /usr/local/etc/php/conf.d/opcache.ini
+
+
 COPY --from=roadrunner /usr/bin/rr /usr/local/bin/rr

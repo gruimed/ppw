@@ -17,17 +17,15 @@ use OpenTelemetry\SemConv\ResourceAttributes;
 
 use OpenTelemetry\Contrib\Otlp\OtlpHttpTransportFactory;
 
-require 'vendor/autoload.php';
 
 $resource = ResourceInfoFactory::emptyResource()->merge(ResourceInfo::create(Attributes::create([
     ResourceAttributes::SERVICE_NAMESPACE => 'demo',
     ResourceAttributes::SERVICE_NAME => 'test-application',
     ResourceAttributes::SERVICE_VERSION => '0.1',
-    ResourceAttributes::DEPLOYMENT_ENVIRONMENT => 'development',
 ])));
 
 
-$transport = (new OtlpHttpTransportFactory())->create('http://signoz-otel-collector:4318/v1/traces', 'application/json');
+$transport = (new OtlpHttpTransportFactory())->create('http://otel-collector:4318/v1/traces', 'application/json');
 $spanExporter = new SpanExporter($transport);
 
 
