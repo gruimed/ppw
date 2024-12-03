@@ -50,4 +50,8 @@ services:
       dockerfile: Dockerfile
     hostname: echo-service
 
-
+  wrk:
+    build:
+      context: wrk
+    restart: always
+    command: sleep 5000000
