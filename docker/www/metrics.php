@@ -1,13 +1,11 @@
 <?php
 
-ini_set('display_errors', 'On');
-
 header('content-type: text/plain; version=0.0.4; charset=utf-8; escaping=values');
 
 $connect = new mysqli('pinba', 'root');
 
 /*
-
+DROP TABLE `report_by_script_name`;
 CREATE TABLE `report_by_script_name` (
   `script` varchar(64) NOT NULL,
   `req_count` int(10) unsigned NOT NULL,
@@ -28,7 +26,7 @@ CREATE TABLE `report_by_script_name` (
   `memory_footprint` bigint(20) NOT NULL,
   `memory_per_sec` float NOT NULL,
   `memory_percent` float DEFAULT NULL
-) ENGINE=PINBA DEFAULT CHARSET=latin1 COMMENT='v2/request/60/~script/no_percentiles/no_filters'
+) ENGINE=PINBA DEFAULT CHARSET=latin1 COMMENT='v2/request/10/~script/no_percentiles/no_filters';
 */
 
 $result = $connect->query(
@@ -39,7 +37,8 @@ $result = $connect->query(
         req_time_total/req_count as time_avg, 
         ru_utime_total/req_count as ru_utime_avg,
         ru_stime_total/req_count as ru_stime_avg 
-    from pinba.report_by_script_name;');
+    from pinba.report_by_script_name'
+);
 
 foreach ($result as $row) {
     foreach(['req_per_sec', 'time_avg', 'ru_utime_avg', 'ru_stime_avg'] as $metric) {
@@ -48,7 +47,7 @@ foreach ($result as $row) {
 }
 /*
 
-
+DROP TABLE `report_script_span`;
 CREATE TABLE `report_script_span` (
       `script` varchar(64) NOT NULL,
       `span` varchar(64) NOT NULL,
@@ -68,7 +67,7 @@ CREATE TABLE `report_script_span` (
       `ru_stime_per_sec` float NOT NULL,
       `ru_stime_percent` float NOT NULL
     ) ENGINE=PINBA DEFAULT CHARSET=latin1 
-    COMMENT='v2/timer/60/~script,@span/no_percentiles/no_filters';
+    COMMENT='v2/timer/10/~script,@span/no_percentiles/no_filters';
 
     */
 $result = $connect->query('
@@ -81,7 +80,8 @@ $result = $connect->query('
         time_total/hit_count as time_avg, 
         ru_utime_total/hit_count as ru_utime_avg,
         ru_stime_total/hit_count as ru_stime_avg
-    from pinba.report_script_span');
+    from pinba.report_script_span'
+);
 
 foreach ($result as $row) {
     foreach(['req_per_sec', 'hit_per_sec', 'time_avg', 'ru_utime_avg', 'ru_stime_avg'] as $metric) {
