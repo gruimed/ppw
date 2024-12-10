@@ -1,5 +1,8 @@
 version: '3'
 
+metrics:
+  address: 0.0.0.0:2112
+
 rpc:
   listen: tcp://127.0.0.1:6001
 
@@ -16,7 +19,7 @@ otel:
 
 http:
   address: "0.0.0.0:8080"
-  middleware: [gzip, otel]
+  middleware: [gzip, otel, http_metrics]
   pool:
     num_workers: 64
     max_jobs: 200

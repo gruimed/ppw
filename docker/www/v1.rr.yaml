@@ -9,7 +9,10 @@ server:
 http:
   address: "0.0.0.0:8080"
   middleware: [gzip]
-
+  pool:
+    num_workers: 64
+    max_jobs: 200
+    
 logs:
   level: info
   output: stdout
