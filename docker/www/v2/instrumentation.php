@@ -32,6 +32,7 @@ $spanExporter = new SpanExporter($transport);
 $tracerProvider = TracerProvider::builder()
     ->addSpanProcessor(
         new SimpleSpanProcessor($spanExporter)
+//      (new BatchSpanProcessorBuilder($spanExporter))->build()
     )
     ->setResource($resource)
     ->setSampler(new ParentBased(new AlwaysOnSampler()))
